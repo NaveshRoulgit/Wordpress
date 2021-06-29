@@ -1,0 +1,6 @@
+For automated Post-addition every hour, we need:
+(i) A Jenkins job with 'Build Periodically Schedule' Build trigger activated with CRON format '0 * * * *'
+(ii) A declarative script written for putting a random text in title/content, written in Python or Groovy or Shell script
+(iii) Credentials to the Wordpress site saved in Jenkins
+(iv) Need to have our JDK and Ant/Maven configured to our Job for building artifact
+(v) We can use the Plug-in 'Deploy to Container' for automatic deployment process
