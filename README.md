@@ -100,5 +100,57 @@ Stepwise Process:
                            password={{ wp_mysql_password }}
                            priv=*.*:ALL
                      become: yes
+                  
+       x)We will add the following contents into project/roles/wordpress/tasks/main.yml
+                  
+                  ---
+                  #tasks file for wordpress
+                  - name: Download WordPress
+                    get_url:
+                        url=https://wordpress.org/latest.tar.gz
+                        dest=/tmp/wordpress.tar.gz
+                        validate_certs=no
 
+                  - name: Extract WordPress
+                    unarchive: src=/tmp/wordpress.tar.gz dest=/var/www/   copy=no
+                    become: yes
 
+                  - name: Update default Apache site
+                    become: yes
+                    lineinfile:
+                        dest=/etc/apache2/sites-enabled/000-default.conf
+                        regexp="(.)+DocumentRoot /var/www/html"
+                        line="DocumentRoot /var/www/wordpress"
+                        notify:
+                          - restart apache
+
+                  - name: Copy sample config file
+                    command: mv /var/www/wordpress/wp-config-sample.php /var/www/wordpress/wp-config.php creates=/var/www/wordpress/wp-config.php
+                    become: yes
+
+                  - name: Update WordPress config file
+                    lineinfile:
+                        dest=/var/www/wordpress/wp-config.php
+                        regexp="{{ item.regexp }}"
+                        line="{{ item.line }}"
+                    with_items:
+                      - {'regexp': "define\\('DB_NAME', '(.)+'\\);", 'line': "define('DB_NAME', '{{wp_mysql_db}}');"}
+                      - {'regexp': "define\\('DB_USER', '(.)+'\\);", 'line': "define('DB_USER', '{{wp_mysql_user}}');"}
+                      - {'regexp': "define\\('DB_PASSWORD', '(.)+'\\);", 'line': "define('DB_PASSWORD', '{{wp_mysql_password}}');"}
+                    become: yes
+
+        xi)Finally, we will add the following snippet to project/roles/wordpress/handlers/main.yml to restart the apache
+                  ---
+                  # handlers file for wordpress
+                  - name: restart apache
+                    service: name=apache2 state=restarted
+                    become: yes
+
+        xii)Now, we will run the Ansible Playbook 'play.yml'
+                  project>> ansible-playbook play.yml -i hosts -i ubuntu
+                  
+                  
+        xiii)Then, put the Public IP of AWS instance in the Browser:
+                  -The initial installation and congiguration page of WordPress opens
+                  -Give the details of Site title, username, password, email and click on                      'Install Wordpress'
+                  -Login with the credentials again for the Web dashboard and the Website.
