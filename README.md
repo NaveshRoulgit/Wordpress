@@ -19,7 +19,7 @@ Stepwise Process:
       >>ansible -m ping all
       If O/P is "Ping":"Pong" means its connected
 
-  v)Now, we will define different required roles in a 'Roles' sub-directoryunder a 'Project' directory:
+  v)Now, we will define different required roles in a 'Roles' sub-directory under a 'Project' directory:
       >>mkdir project
       >>cd project
       >>mkdir roles
@@ -152,5 +152,8 @@ Stepwise Process:
                   
         xiii)Then, put the Public IP of AWS instance in the Browser:
                   -The initial installation and congiguration page of WordPress opens
-                  -Give the details of Site title, username, password, email and click on                      'Install Wordpress'
+                  -Give the details of Site title, username, password, email and click on 'Install Wordpress'
                   -Login with the credentials again for the Web dashboard and the Website.
+                  
+          
+       ## For Higher Availability we can create our own VPC(Virtual Private Cloud) network in AWS cloud and use the Elastic Load Balancer(ELB) service in AWS.
